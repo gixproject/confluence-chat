@@ -1,0 +1,40 @@
+services:
+  app:
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - .:/app/
+      - ~/.aws:/root/.aws:ro  # pass existing AWS credentials
+    logging:
+      driver: ${LOG_DRIVER:-none}
+      options:
+        awslogs-region: ${AWS_REGION:-none}
+        awslogs-group: ${AWS_LOG_GROUP:-none}
+        awslogs-create-group: "true"
+        awslogs-stream: app
+
+  nginx:
+    build:
+      context: .
+      dockerfile: infra/nginx/Dockerfile
+    restart: unless-stopped
+    profiles:
+      - server
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./infra/nginx:/etc/nginx/conf.d/
+    logging:
+      driver: ${LOG_DRIVER:-none}
+      options:
+        awslogs-region: ${AWS_REGION:-none}
+        awslogs-group: ${AWS_LOG_GROUP:-none}
+        awslogs-create-group: "true"
+        awslogs-stream: nginx

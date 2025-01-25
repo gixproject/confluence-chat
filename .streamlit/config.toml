@@ -1,0 +1,11 @@
+[server]
+port = 8070
+headless = true
+
+[browser]
+serverAddress = "localhost"
+serverPort = 8070
+
+[client]
+showErrorDetails = "full"
+toolbarMode = "auto"

@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "confluence-chat"
+version = "0.1.0"
+description = "Confluence chat allows you to connect and chat with your confluence using Bedrock knowdledge base."
+authors = ["gixproject <viacheslavlab@gmail.com>"]
+repository = "https://github.com/gixproject/confluence-chat"
+packages = [{"include" = "confluence_chat"}]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+langchain = "^0.3.3"
+langchain-community = "^0.3.2"
+boto3 = "^1.35.37"
+langchain-aws = "^0.2.11"
+chromadb = "^0.5.12"
+streamlit = "^1.39.0"
+streamlit-authenticator = "^0.4.1"
+typer = "^0.15.1"
+pydantic = {extras = ["email"], version = "^2.10.3"}
+sqlalchemy = "^2.0.36"
+watchdog = "^6.0.0"
+httpx = "^0.28.1"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.0.1"
+ruff = "^0.8.2"
+mypy = "1.13.0"
+
+[tool.mypy]
+strict = false
+ignore_missing_imports = true
+disallow_subclassing_any = true
+disallow_untyped_decorators = true
+allow_untyped_calls = true
+disable_error_code = ["import-untyped"]
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+exclude = ["*/prompts.py"]
+
+[tool.ruff.lint]
+select = [
+    "B",
+    "E",
+    "F",
+    "ISC",
+    "UP",
+]
+
+fixable = ["ALL"]
+unfixable = []
+ignore = ["ISC001"]
