@@ -1,0 +1,59 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: debug-statements
+      - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix, lf]
+      - id: name-tests-test
+        args: [--pytest-test-first]
+      - id: no-commit-to-branch
+        args: [--branch, develop, --branch, main]
+      - id: pretty-format-json
+      - id: trailing-whitespace
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+      - id: python-check-blanket-type-ignore
+      - id: python-check-mock-methods
+      - id: python-no-eval
+      - id: python-no-log-warn
+      - id: python-use-type-annotations
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.16.0
+    hooks:
+      - id: pyupgrade
+        args: [--py311-plus]
+
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v3.1.0
+    hooks:
+      - id: add-trailing-comma
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.1
+    hooks:
+      - id: ruff
+      - id: ruff-format
+
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.23.1
+    hooks:
+      - id: typos
+
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks

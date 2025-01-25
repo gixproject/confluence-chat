@@ -1,0 +1,68 @@
+name: Reusable deploy workflow
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+env:
+  TF_VAR_project_source: "${{ github.workspace }}"
+  TF_VAR_environment: "${{ inputs.environment }}"
+  TF_VAR_confluence_host: "${{ secrets.confluence_host }}"
+  TF_VAR_confluence_email: "${{ secrets.confluence_email }}"
+  TF_VAR_confluence_token: "${{ secrets.confluence_token }}"
+  TF_LOG: INFO
+
+jobs:
+  deployment:
+    name: Infrastructure deployment
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    defaults:
+      run:
+        working-directory: infra/
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Add the SSH key to the ssh-agent
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform plan
+        continue-on-error: false
+        run: terraform plan -no-color -input=false
+
+      - name: Terraform apply
+        id: apply
+        run: terraform apply -auto-approve
+
+      - name: Update source code
+        run: |
+          rsync -rvz -I -e "ssh -o StrictHostKeyChecking=no" \
+              ${{ github.workspace }}/ \
+              ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }}:/home/${{ vars.EC2_USER }}/${{vars.PROJECT_NAME}}
+
+      - name: Restart the application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ vars.EC2_USER }}@${{ vars.EC2_HOST }} \
+            'cd ${{vars.PROJECT_NAME}} && ./infra/service_start.sh'

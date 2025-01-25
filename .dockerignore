@@ -1,0 +1,16 @@
+# Directories
+.idea/
+.git/
+
+# Files
+.env.example
+.gitignore
+README.md
+.DS_Store
+*.md
+*Dockerfile*
+
+# Terraform
+.terraform*
+terraform.tfstate*
+*.tf
