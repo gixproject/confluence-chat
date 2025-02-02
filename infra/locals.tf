@@ -26,9 +26,9 @@ locals {
                  "CONFLUENCE_TOKEN=${var.confluence_token}" \
                  "CONFLUENCE_HOST=${var.confluence_host}" \
                  "AWS_S3_BUCKET=${local.main_bucket_name}" \
-                 "AWS_BEDROCK_GUARDRIAL_ID=6onin5akxvy1 \
-                 "AWS_KNOWLEDGE_BASE_ID=TCXBA8ZJW7 \
-                 "AWS_DATA_SOURCE_ID=VBFFP8FBWA \
+                 "AWS_BEDROCK_GUARDRIAL_ID=6onin5akxvy1" \
+                 "AWS_KNOWLEDGE_BASE_ID=TCXBA8ZJW7" \
+                 "AWS_DATA_SOURCE_ID=VBFFP8FBWA" \
                  "AWS_REGION=${var.region}" \
                  "LOG_DRIVER=awslogs" \
                  "AWS_LOG_GROUP=${local.project_name}-${var.environment}" \
