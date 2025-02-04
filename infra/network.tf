@@ -1,11 +1,9 @@
-# VPC configuration
 resource "aws_vpc" "main_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
 }
 
-# Subnet configuration
 resource "aws_subnet" "main_subnet" {
   vpc_id                  = aws_vpc.main_vpc.id
   cidr_block              = "10.0.0.0/24"
@@ -13,12 +11,10 @@ resource "aws_subnet" "main_subnet" {
   map_public_ip_on_launch = true # Use subnet for instance launch
 }
 
-# Gateways
 resource "aws_internet_gateway" "inet_gateway" {
   vpc_id = aws_vpc.main_vpc.id
 }
 
-# Elastic IP
 resource "aws_eip" "server_eip" {
   instance = aws_instance.server.id
 }

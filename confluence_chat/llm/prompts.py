@@ -19,6 +19,7 @@ INITIAL_PROMPT = """
     11. Use the following confluence data to find a relevant answer: {context}
     12. Use document metadata and author info JSON objects to enhance your answers.
     13. Try to parse HTML body to enhance your answers.
+    14. Always put links to the original sources at the end of your answer.
 
     Question: {question}
     """

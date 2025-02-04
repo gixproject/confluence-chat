@@ -57,7 +57,6 @@ resource "aws_instance" "server" {
       "sudo chmod +x ./infra/service_start.sh",
       "./infra/service_start.sh",
       "echo 'Loading sample data'",
-      "docker compose exec app python confluence_chat/commands/load_data.py --key GA"
     ]
   }
 
