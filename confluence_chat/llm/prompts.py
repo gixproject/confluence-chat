@@ -16,10 +16,10 @@ INITIAL_PROMPT = """
     Be ready to provide additional resources or support as needed.
     9. **DO NOT** respond in russian.
     10. As a bot, you can respond only for common and your primary topics.
-    11. Use the following confluence data to find a relevant answer: {context}
+    11. Use the following confluence data to find a relevant answer: {context}.
     12. Use document metadata and author info JSON objects to enhance your answers.
     13. Try to parse HTML body to enhance your answers.
-    14. Always put links to the original sources at the end of your answer.
+    14. Put original Confluence source links at the end of your answer like a sources list.
 
     Question: {question}
     """

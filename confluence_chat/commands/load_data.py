@@ -1,6 +1,7 @@
 import asyncio
 import logging.config
 from functools import wraps
+from urllib.parse import urljoin
 
 import boto3
 import typer
@@ -43,6 +44,8 @@ async def main(key: list[str] | None = None) -> None:
         logger.error("No spaces found")
         exit(1)
 
+    uploaded_pages = 0
+
     for space in spaces:
         rprint(f'[yellow]Processing space "{space.name}".[/yellow]')
         pages = await confluence_client.get_pages(space_id=space.id)
@@ -52,10 +55,10 @@ async def main(key: list[str] | None = None) -> None:
             author = await confluence_client.get_user(account_id=page.authorId)
 
             content = page.body.storage.value.replace("&quot", "")
-            print("\n")
-            print(content)
+            source = urljoin(str(settings.confluence.host), page.links.webui)
 
             body = (
+                f"Original Confluence source: {source}\n"
                 f"Document metadata:\n{page.model_dump_json(exclude={"body"})}\n"
                 f"Author info:\n{author}\n"
                 f"HTML body:```html\n{content}```"
@@ -67,6 +70,7 @@ async def main(key: list[str] | None = None) -> None:
                 Key=f"docs/{page.title}.txt",
                 Body=body.encode("utf-8"),
             )
+            uploaded_pages += 1
 
     # Ingestion job to sync new files with the data store
     bedrock_agent_client.start_ingestion_job(
@@ -75,7 +79,7 @@ async def main(key: list[str] | None = None) -> None:
     )
 
     rprint("[blue]Ingestion job started.[/blue]")
-    rprint("[green]Data successfully loaded.[/green]")
+    rprint(f"[green]{uploaded_pages} pages successfully uploaded.[/green]")
 
 
 if __name__ == "__main__":

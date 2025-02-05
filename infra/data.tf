@@ -17,7 +17,10 @@ data "aws_iam_policy_document" "ec2_default_policy" {
     effect = "Allow"
     actions = [
       "bedrock:InvokeModel",
-      "bedrock:InvokeModelWithResponseStream"
+      "bedrock:InvokeModelWithResponseStream",
+      "bedrock:ApplyGuardrail",
+      "bedrock:Retrieve",
+      "bedrock:StartIngestionJob"
     ]
     resources = ["*"]
   }
